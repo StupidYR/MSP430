@@ -5,17 +5,17 @@ void main(void)
     P8DIR |= BIT1;
     P8OUT &= ~BIT1;
     
-    P1REN |= BIT2;      //ÅäÖÃÉÏÀ­µç×è
-    P1OUT |= BIT2;      //³õÊ¼»¯¶Ë¿ÚµçÆ½
-    P1IES &= ~BIT2;     //ÅäÖÃÏÂ½µÑØ´¥·¢
-    P1IFG &= ~BIT2;     //Çå³ıÖĞ¶Ï±êÖ¾Î»
-    P1IE |= BIT2;       //Ê¹ÄÜ¶Ë¿ÚÖĞ¶Ï
+    P1REN |= BIT2;      //é…ç½®ä¸Šæ‹‰ç”µé˜»
+    P1OUT |= BIT2;      //åˆå§‹åŒ–ç«¯å£ç”µå¹³
+    P1IES &= ~BIT2;     //é…ç½®ä¸‹é™æ²¿è§¦å‘
+    P1IFG &= ~BIT2;     //æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
+    P1IE |= BIT2;       //ä½¿èƒ½ç«¯å£ä¸­æ–­
     
-    __enable_interrupt();
+    __enable_interrupt();   //æ€»ä¸­æ–­ä½¿èƒ½
 }
 
-#pragma vector=PORT1_VECTOR
-__interrupt void Port_1(void)
+#pragma vector=PORT1_VECTOR     //ä½¿èƒ½P1ç«¯å£çš„ä¸­æ–­
+__interrupt void Port_1(void)   //å°†ä¸­æ–­å‡½æ•°å‘½åä¸ºPort_1
 {
     P8OUT |= BIT1;
     P1IFG &= ~BIT2;
