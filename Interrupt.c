@@ -1,4 +1,5 @@
 #include<msp430f5529.h>
+
 void main(void)
 {
     WDTCTL = WDTPW + WDTHOLD;
