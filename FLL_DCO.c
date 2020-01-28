@@ -31,7 +31,7 @@ void main(void)
     //  f_DCO(n, 0)_MAX ≤ f_DCO ≤ f_DCO(n, 31)_MIN
     // 范围参见数据手册 DCO Frequency
     
-    UCSCTL2 = FLLD_1 + 74;        // 配置FLL_D：二分频    配置FLL_N：74
+    UCSCTL2 = FLLD_1 + 74;        // 配置FLL_D：两分频    配置FLL_N：74
     
     // (N + 1) * FLLRef = Fdco
     // (74 + 1) * 32768 = 2.45MHz
