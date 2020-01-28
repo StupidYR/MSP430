@@ -12,7 +12,7 @@ void main(void)
     P1IFG &= ~BIT2;     //清除中断标志位
     P1IE |= BIT2;       //使能端口中断
     
-    __enable_interrupt();   //总中断使能
+    _ENIT();    //为__enable_interrupt()的宏定义；总中断使能
 }
 
 #pragma vector=PORT1_VECTOR     //使能P1端口的中断
