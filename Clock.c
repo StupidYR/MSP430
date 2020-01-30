@@ -1,33 +1,39 @@
 #include <msp430f5529.h>
+
+void clock_check();
+
 void main(void)
 {
-	WDTCTL = WDTPW + WDTHOLD;    
+    WDTCTL = WDTPW + WDTHOLD;    
 
-	P1DIR |= BIT0;               // ÆôÓÃµÚ¶þ¹¦ÄÜ ACLK 
-	P1SEL |= BIT0;
-        
-	P2DIR |= BIT2;               // ÆôÓÃµÚ¶þ¹¦ÄÜ SMCLK 
-	P2SEL |= BIT2;
-        
-	P7DIR |= BIT7;               // ÆôÓÃµÚ¶þ¹¦ÄÜ MCLK 
-	P7SEL |= BIT7;
+    P1DIR |= BIT0;               // å¯ç”¨ç¬¬äºŒåŠŸèƒ½ ACLK 
+    P1SEL |= BIT0;
+    P2DIR |= BIT2;               // å¯ç”¨ç¬¬äºŒåŠŸèƒ½ SMCLK 
+    P2SEL |= BIT2;
+    P7DIR |= BIT7;               // å¯ç”¨ç¬¬äºŒåŠŸèƒ½ MCLK 
+    P7SEL |= BIT7;
 
-	P5SEL |= BIT2+BIT3;          // ÆôÓÃµÚ¶þ¹¦ÄÜ XT2 IN/OUT
+    P5SEL |= BIT2+BIT3;          // å¯ç”¨ç¬¬äºŒåŠŸèƒ½ XT2 IN/OUT
+    UCSCTL6 &= ~(XT1OFF + XT2OFF);  // é…ç½®UCSTRL ä½¿èƒ½XT1 & XT2 
+    UCSCTL6 |= XCAP_3;           // é…ç½®è´Ÿè½½ç”µå®¹
         
-	UCSCTL6 &= ~(XT1OFF + XT2OFF);  // ÅäÖÃUCSTRL Ê¹ÄÜXT1 & XT2 
-        
-	UCSCTL6 |= XCAP_3;           // ÅäÖÃ¸ºÔØµçÈÝ
-        
-// Ñ­»·Ö±µ½XT1 ,XT2 & DCO µÄ¹ÊÕÏ±êÖ¾±»Çå³ý
-    do
-    {
-    	UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);     // Çå³ý XT2,µÍÆµXT1,DCO µÄ ¹ÊÕÏ±êÖ¾ £¨fault flags£©
-    	
-        SFRIFG1 &= ~OFIFG;       // Çå³ý¹ÊÕÏ±êÖ¾
-        
-    }while (SFRIFG1 & OFIFG);      // ¼à²âÕñµ´Æ÷¹ÊÕÏ±êÖ¾
+    clock_check();
 
-    UCSCTL6 &= ~XT2DRIVE0;       // ½µµÍXT2 Õñµ´Æ÷µÄ¹¤×÷ÆµÂÊ£¬¼õÉÙµçÁ÷ÏûºÄ
+    UCSCTL6 &= ~XT2DRIVE0;       // é™ä½ŽXT2 æŒ¯è¡å™¨çš„å·¥ä½œé¢‘çŽ‡ï¼Œå‡å°‘ç”µæµæ¶ˆè€—
+    UCSCTL4 |= SELA_0 + SELS_5;  // é€‰æ‹© SMCLK, ACLKçš„æ—¶é’Ÿæº 
     
-    UCSCTL4 |= SELA_0 + SELS_5;  // Ñ¡Ôñ SMCLK, ACLKµÄÊ±ÖÓÔ´ 
+    while(1)
+    {
+        //do do do something
+    }
  }
+void clock_check()
+{
+    while (SFRIFG1 & OFIFG)     // ç›‘æµ‹æŒ¯è¡å™¨æ•…éšœæ ‡å¿—
+    {
+    	UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);     // æ¸…é™¤ XT2,ä½Žé¢‘XT1,DCO çš„æ•…éšœæ ‡å¿— ï¼ˆfault flagsï¼‰
+    	
+        SFRIFG1 &= ~OFIFG;       // æ¸…é™¤æ•…éšœæ ‡å¿— 
+    }
+}
+
