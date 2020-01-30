@@ -8,31 +8,26 @@ int main(void)
     P1DIR |= BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5;
     P1OUT &= ~(BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5);
     P8DIR |= BIT1 + BIT2;
-    P8OUT &= ~(BIT1 + BIT2);    //��ʼ��LED��I/O��
+    P8OUT &= ~(BIT1 + BIT2);    //初始化LED的I/O口
     
-    P1DIR &= ~BIT7;     //����P1^7��Ϊ����״̬
-    P1OUT |= BIT7;      //�Ϻ�·
-    P1REN |= BIT7;      //��P1^7�ڽ���������
-    P1IE |= BIT7;       //�ж�ʹ��
-    P1IFG &= ~BIT7;     //����жϱ�־λ
-    P1IES |= BIT7;      //��1�������½��ش���
-    __enable_interrupt();       //���ж�ʹ��
+    P1DIR &= ~BIT7;     //设置P1^7口为输入状态
+    P1OUT |= BIT7;      //断后路
+    P1REN |= BIT7;      //将P1^7口接上拉电阻
+    P1IE |= BIT7;       //中断使能
+    P1IFG &= ~BIT7;     //清除中断标志位
+    P1IES |= BIT7;      //置1；设置下降沿触发
+    __enable_interrupt();       //总中断使能
     
     while(1)
-      LED();    //LED��˸����
+      LED();    //LED闪烁函数
 }
 
-#pragma vector = PORT1_VECTOR   //P1ϵ�ж˿ڵ����жϺ���
-__interrupt void port_1(void)   //����һ����Ϊport_1���жϺ���
+#pragma vector = PORT1_VECTOR   //P1系列端口的总中断函数
+__interrupt void port_1(void)   //定义一个名为port_1的中断函数
 {
-  if(P1IFG & BIT7)      //�ж��Ƿ�ΪP1^7�ڲ����ж�
-  {
-    
-    while((P1IN & BIT7)==0);      //�ȴ������ͷ�
+    while((P1IN & BIT7)==0);      //等待按键释放
     flag=~flag;
-    
-  }
-  P1IFG &= ~BIT7;       //����жϱ�־λ
+    P1IFG &= ~BIT7;       //清除中断标志位
 }
 
 void choose_delay()
