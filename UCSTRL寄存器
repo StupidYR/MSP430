@@ -1,0 +1,76 @@
+UCSCTL Resgiter：统一时钟系统控制寄存器
+
+《UCSCTL0》
+1. 在不使用FLL的时候，需要首先设定DCO和MOD，
+2. 在使用FLL的时候，一般会自动调整，可设定为0x00
+
+《UCSCTL1》
+1. DCORSEL: 使用FLL时，选择DCO的频率范围
+2. DCOMOD: 调制器使能位 ，0（默认），使能；1，禁止
+   
+《UCSCTL2》
+1. FLLD: 分频系数；          FLLD_0：1分频         FLLD_1（默认）：2分频，
+                             FLLD_2：4分频         FLLD_3：8分频
+                             FLLD_4：16分频        FLLD_5：32分频        注：n分频 = N   
+                  
+2. FLLN：倍频系数；范围是0-9，共10位，最高1024
+
+《UCSCTL3》
+1. SELREF: FLL的参考时钟的选择        SELREF_0 = XT1CLK（默认）
+                                      SELREF_2 = REFOCLK    
+                                      SELREF_5 = XT2CLK     
+                                  
+2. FLLREFDIV: FLL参考时钟分频         FLLREFDIV_0：1分频（默认）  FLLREFDIV_1：2分频
+                                      FLLREFDIV_2：4分频          FLLREFDIV_3：8分频
+                                      FLLREFDIV_4：12分频         FLLREFDIV_5：16分频
+                              
+《UCSCTL4》
+1. SELA: 选择ACLK的时钟源
+2. SELS: 选择SMCLK的时钟源
+3. SELM: 选择MCLK的时钟源     SELx_0：XT1    SELx_1：VLO              SELx_2：REFO                     
+                               SELx_3：DCO    SELx_4：DCOCLKDIV        SELx_5：XT2（XT2无效时DCOCLKDIV）
+         
+     
+《UCSCTL5》
+1. DIVPA: ACLK外部管脚的分频，把频率传输给外部管脚
+2. DIVA：ACLK的分频
+3. DIVS：SMCLK的分频
+4. DIVM：MCLK的分频          FLLD_0：1分频         FLLD_1（默认）：2分频，
+                            FLLD_2：4分频         FLLD_3：8分频
+                            FLLD_4：16分频        FLLD_5：32分频   
+
+《UCSCTL6》
+1. XT2DRIVE：XT2振荡器电流驱动能力调整      X0T2DRIVE0 最低电流消耗。XT2振荡器工作在4MHz到8MHz
+
+2. XT2BYPASS：XT2旁路选择         
+              XT2BYPASS0: XT2来源于内部时钟（使用外部晶振）        
+              XT2BYPASS1: XT2来源于外部引脚输入（旁路模式）
+ 
+3. XT2OFF：关闭XT2振荡器        
+           0 -当XT2引脚被设置为XT2功能且没有被设置位旁路模式时，XT2被打开
+           1 -当XT2没有被用作时钟源以及没有用作FLL参考时钟时，XT2被关闭
+           
+4. XTS：XT1工作模式选择
+        0-低频模式（XCAP定义XIN和XOUT引脚间的电容）
+        1-高频模式（XCAP位没有被使用）
+        
+5. XCAP：振荡器负载电容选择
+
+6. SMCLKOFF：SMCLK关闭控制位        0-SMCLK开           1-SMCLK关闭 
+             
+7. XT1OFF：同XT2OFF
+
+
+《UCSCTL7》
+1. XT2OFFG：XT2出错时置位，同时OFFIFG也会置位，需要软件清零。
+2. XT1HFOFFG：高频工作模式下XT1出错时置位，同时OFFIFG也会置位，需要软件清零。
+3. XT1LFOFFG：低频工作模式下XT1出错时置位，同时OFFIFG也会置位，需要软件清零。
+4. DCOFFG：DCO出错时置位，但当DCO=1或31时，也会置位，同时OFFIFG也会置位，需要软件清零。
+
+
+《UCSCTL8》
+信号请求使能：0-相应的信号请求禁止      1-相应的信号请求允许
+
+《UCSCTL9》
+XT1、XT2旁路模式输入摇摆电平（范围）必须被设置
+0-输入范围0~DVCC              1-输入范围0~DVIO
