@@ -4,9 +4,13 @@
 
   f_DCOCLKDIV = (N + 1) * f_REFCLK / n
 
+  t_delay = n x 32 x 32 x f_MCLK / f_REFCLK
+
 注：D：FLLD 默认为FLLD_1，此时为二分频，D = 2
     N：FLLN 默认为FLLN = 31
-    f_REFCLK：选择REFCLK的参考时钟源的频率 默认为 XT1
+
+    FLL的时钟是由REFCLK提供的
+    f_REFCLK：REFCLK的参考时钟源的频率 默认为 XT1
     n：FLLREFDIV 默认为FLLREFDIV_0,此时为一分频，n = 1
 
 *************************END**************************/
@@ -19,15 +23,15 @@ void IO_Init();
 void main(void)
 {
       WDTCTL = WDTPW + WDTHOLD;
-// 配置DCO 为 2.45MHz     
-      UCSCTL3 = SELREF_2;           //选择REFO来作为FLL的参考时钟源
+// 配置DCO 为 2.45MHz
+      UCSCTL3 = SELREF_2;           //选择REFO来作为FLL的参考时钟源（REFCLK）
       clock_check();                //检测时钟源是否稳定
       __bis_SR_register(SCG0);      // 关闭FLL控制；   如果不关闭的话，FLL寄存器不会改变
       UCSCTL0 = 0;                  // 配置 DCOx = 0 , MODx = 0 ；
       UCSCTL1 = DCORSEL_3;          // 配置DCO的频率范围 1.51————6.07 
       UCSCTL2 = FLLD_0 + 74;        // 配置FLL_D：一分频    配置FLL_N：74
       __bic_SR_register(SCG0);      // 开启FLL控制
-      __delay_cycles(76563);
+      __delay_cycles(76563);        //
       clock_check();
       
       while(1)
