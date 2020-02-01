@@ -19,18 +19,21 @@ void main(void)
 {
       WDTCTL = WDTPW + WDTHOLD;
       P1DIR |= BIT2+BIT3;               
-      P1SEL |= BIT2+BIT3;               // P1^2和P1^3引脚功能选为定时器输出
+      P1SEL |= BIT2+BIT3;               // P1.2和P1.3引脚功能选为定时器输出
       
       clock_check();
       
-      TA0CCR0 = 512-1;                  // PWM周期定义
+      TA0CCR0 = 512-1;                  // 控制PWM周期
+      //PWM周期 = (TA0CCR0 + 1) / f_TASSEL
+      //此时    = 512 / 32.768K = 15.625us
+      
       TA0CCTL1 = OUTMOD_7;              // CCR1比较输出模式7：复位/置位
-      TA0CCR1 = 384;                    // CCR1 PWM 占空比定义
+      TA0CCR1 = 384;                    // CCR1：控制PWM占空比
       // 此模式下占空比 = TA0CCR1 / TA0CCR0  
-      ////占空比为 75%
+      //此时            = 75%
       
       TA0CCTL2 = OUTMOD_7;              // CCR2 比较输出模式7：复位/置位
-      TA0CCR2 = 128;                    // CCR2 PWM 占空比定义
+      TA0CCR2 = 128;                    // CCR2：控制PWM占空比
       //占空比为 25%
       
       TA0CTL = TASSEL_1 + MC_1 + TACLR;	
